@@ -1,19 +1,24 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { createPopper } from '@popperjs/core/dist/esm/popper';
-  import classnames from './utils';
+  import classnames, { uuid } from './utils';
+  import InlineContainer from './InlineContainer.svelte';
+  import Portal from './Portal.svelte';
 
   let className = '';
   export { className as class };
-  export let target = '';
-  export let placement = 'top';
-  export let children = undefined;
   export let animation = true;
+  export let children = undefined;
+  export let container = undefined;
+  export let id = `tooltip_${uuid()}`;
   export let isOpen = false;
+  export let placement = 'top';
+  export let target = '';
+  let bsPlacement;
   let popperInstance;
   let popperPlacement = placement;
-  let tooltipEl;
   let targetEl;
+  let tooltipEl;
 
   const checkPopperPlacement = {
     name: 'checkPopperPlacement',
@@ -36,39 +41,71 @@
     }
   }
 
+  const open = () => (isOpen = true);
+  const close = () => (isOpen = false);
+
   onMount(() => {
     targetEl = document.querySelector(`#${target}`);
-    targetEl.addEventListener('mouseover', () => isOpen = true);
-    targetEl.addEventListener('mouseleave', () => isOpen = false);
+    targetEl.addEventListener('mouseover', open);
+    targetEl.addEventListener('mouseleave', close);
+    targetEl.addEventListener('focus', open);
+    targetEl.addEventListener('blur', close);
   });
+
+  onDestroy(() => {
+    if (targetEl) {
+      targetEl.removeEventListener('mouseover', open);
+      targetEl.removeEventListener('mouseleave', close);
+      targetEl.removeEventListener('focus', open);
+      targetEl.removeEventListener('blur', close);
+      targetEl.removeAttribute('aria-describedby');
+    }
+  });
+
+  $: if (targetEl) {
+    if (isOpen) targetEl.setAttribute('aria-describedby', id);
+    else targetEl.removeAttribute('aria-describedby');
+  }
+
+  $: {
+    if (popperPlacement === 'left') bsPlacement = 'start';
+    else if (popperPlacement === 'right') bsPlacement = 'end';
+    else bsPlacement = popperPlacement;
+  }
 
   $: classes = classnames(
     className,
     'tooltip',
     animation ? 'fade' : false,
-    `bs-tooltip-${popperPlacement}`,
+    `bs-tooltip-${bsPlacement}`,
     isOpen ? 'show' : false
   );
 
   $: if (!target) {
     throw new Error('Need target!');
   }
+
+  $: outer = container === 'inline' ? InlineContainer : Portal;
 </script>
 
 {#if isOpen}
-  <div
-    bind:this={tooltipEl}
-    {...$$restProps}
-    class={classes}
-    role="tooltip"
-    x-placement={popperPlacement}>
-    <div class="arrow" data-popper-arrow />
-    <div class="tooltip-inner">
-      {#if children}
-        {children}
-      {:else}
-        <slot />
-      {/if}
+  <svelte:component this={outer}>
+    <div
+      bind:this={tooltipEl}
+      {...$$restProps}
+      class={classes}
+      {id}
+      role="tooltip"
+      x-placement={popperPlacement}
+    >
+      <div class="tooltip-arrow" data-popper-arrow />
+      <div class="tooltip-inner">
+        {#if children}
+          {children}
+        {:else}
+          <slot />
+        {/if}
+      </div>
     </div>
-  </div>
+  </svelte:component>
 {/if}

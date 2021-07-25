@@ -1,4 +1,4 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
 export interface FormGroupProps {
   row?: boolean;
@@ -6,8 +6,8 @@ export interface FormGroupProps {
   inline?: boolean;
   disabled?: boolean;
   id?: string;
-  tag?: string;
+  tag?: 'div' | 'fieldset';
 }
 
-declare class FormGroup extends LocalSvelteComponent<FormGroupProps> {}
+declare class FormGroup extends SvelteComponentTyped<FormGroupProps> {}
 export default FormGroup;

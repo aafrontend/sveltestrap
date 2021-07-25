@@ -1,4 +1,4 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
 declare type ButtonColor =
   | 'primary'
@@ -10,21 +10,24 @@ declare type ButtonColor =
   | 'light'
   | 'dark'
   | 'link';
+
 declare type ButtonSize = 'lg' | 'sm';
-interface IButtonProps {
+
+export interface ButtonProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['button']> {
   active?: boolean;
   block?: boolean;
   close?: boolean;
   color?: ButtonColor;
   disabled?: boolean;
   href?: string;
+  inner?: HTMLElement;
   outline?: boolean;
   size?: ButtonSize;
 }
 
-/**
- * Bootstrap Button
- */
-declare class Button extends LocalSvelteComponent<IButtonProps> {}
-
-export default Button;
+export default class Button extends SvelteComponentTyped<
+  ButtonProps,
+  { click: WindowEventMap['click'] },
+  { default: {} }
+> {}

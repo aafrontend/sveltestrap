@@ -6,16 +6,25 @@
 <script>
   import classnames from './utils';
   import { browserEvent } from './utils';
-  import { onDestroy, onMount, afterUpdate } from 'svelte';
-  import { fade as fadeTransition } from 'svelte/transition';
-
+  import {
+    createEventDispatcher,
+    onDestroy,
+    onMount,
+    afterUpdate
+  } from 'svelte';
+  import { modalIn, modalOut } from './transitions';
+  import InlineContainer from './InlineContainer.svelte';
+  import ModalBackdrop from './ModalBackdrop.svelte';
+  import ModalBody from './ModalBody.svelte';
+  import ModalHeader from './ModalHeader.svelte';
+  import Portal from './Portal.svelte';
   import {
     conditionallyUpdateScrollbar,
     getOriginalBodyPadding,
     setScrollbarWidth
   } from './utils';
 
-  function noop() {}
+  const dispatch = createEventDispatcher();
 
   let className = '';
   let staticModal = false;
@@ -23,26 +32,22 @@
   export { staticModal as static };
   export let isOpen = false;
   export let autoFocus = true;
+  export let body = false;
   export let centered = false;
+  export let container = undefined;
+  export let fullscreen = false;
+  export let header = undefined;
   export let scrollable = false;
   export let size = '';
   export let toggle = undefined;
   export let labelledBy = '';
   export let backdrop = true;
-  export let onEnter = undefined;
-  export let onExit = undefined;
-  export let onOpened = noop;
-  export let onClosed = noop;
   export let wrapClassName = '';
   export let modalClassName = '';
-  export let backdropClassName = '';
   export let contentClassName = '';
   export let fade = true;
-  export let backdropDuration = fade ? 150 : 0;
   export let unmountOnClose = true;
   export let returnFocusAfterClose = true;
-  export let transitionType = fadeTransition;
-  export let transitionOptions = { duration: fade ? 300 : 0 };
 
   let hasOpened = false;
   let _isMounted = false;
@@ -60,20 +65,12 @@
       hasOpened = true;
     }
 
-    if (typeof onEnter === 'function') {
-      onEnter();
-    }
-
     if (hasOpened && autoFocus) {
       setFocus();
     }
   });
 
   onDestroy(() => {
-    if (typeof onExit === 'function') {
-      onExit();
-    }
-
     destroy();
     if (hasOpened) {
       close();
@@ -145,13 +142,7 @@
 
   function close() {
     if (openCount <= 1) {
-      const modalOpenClassName = 'modal-open';
-      const modalOpenClassNameRegex = new RegExp(
-        `(^| )${modalOpenClassName}( |$)`
-      );
-      document.body.className = document.body.className
-        .replace(modalOpenClassNameRegex, ' ')
-        .trim();
+      document.body.classList.remove('modal-open');
     }
 
     manageFocusAfterClose();
@@ -168,25 +159,28 @@
       }
 
       const backdropElem = _dialog ? _dialog.parentNode : null;
-      if (backdropElem && e.target === backdropElem && toggle) {
+      if (
+        backdrop === true &&
+        backdropElem &&
+        e.target === backdropElem &&
+        toggle
+      ) {
         toggle(e);
       }
     }
   }
 
   function onModalOpened() {
+    dispatch('open');
     _removeEscListener = browserEvent(document, 'keydown', (event) => {
       if (event.key && event.key === 'Escape') {
-        toggle(event);
+        if (toggle && backdrop === true) toggle(event);
       }
     });
-
-    onOpened();
   }
 
   function onModalClosed() {
-    onClosed();
-
+    dispatch('close');
     if (_removeEscListener) {
       _removeEscListener();
     }
@@ -209,43 +203,67 @@
 
   $: classes = classnames(dialogBaseClass, className, {
     [`modal-${size}`]: size,
+    'modal-fullscreen': fullscreen === true,
+    [`modal-fullscreen-${fullscreen}-down`]:
+      fullscreen && typeof fullscreen === 'string',
     [`${dialogBaseClass}-centered`]: centered,
     [`${dialogBaseClass}-scrollable`]: scrollable
   });
+
+  $: outer = container === 'inline' || staticModal ? InlineContainer : Portal;
 </script>
 
 {#if _isMounted}
-  <div
-    class={wrapClassName}
-    tabindex="-1"
-    {...$$restProps}>
-    {#if isOpen}
-      <div
-        transition:transitionType={transitionOptions}
-        ariaLabelledby={labelledBy}
-        class={classnames('modal', modalClassName, {
-          show: isOpen,
-          'd-block': isOpen,
-          'd-none': !isOpen,
-          'position-static': staticModal
-        })}
-        role="dialog"
-        on:introend={onModalOpened}
-        on:outroend={onModalClosed}
-        on:click={handleBackdropClick}
-        on:mousedown={handleBackdropMouseDown}>
-        <div class={classes} role="document" bind:this={_dialog}>
-          <div class={classnames('modal-content', contentClassName)}>
-            <slot name="external" />
-            <slot />
+  <svelte:component this={outer}>
+    <div class={wrapClassName} tabindex="-1" {...$$restProps}>
+      {#if isOpen}
+        <div
+          in:modalIn
+          out:modalOut
+          ariaLabelledby={labelledBy}
+          class={classnames('modal', modalClassName, {
+            fade,
+            'position-static': staticModal
+          })}
+          role="dialog"
+          on:introstart={() => dispatch('opening')}
+          on:introend={onModalOpened}
+          on:outrostart={() => dispatch('closing')}
+          on:outroend={onModalClosed}
+          on:click={handleBackdropClick}
+          on:mousedown={handleBackdropMouseDown}
+        >
+          <slot name="external" />
+          <div class={classes} role="document" bind:this={_dialog}>
+            <div class={classnames('modal-content', contentClassName)}>
+              {#if header}
+                <ModalHeader {toggle}>
+                  {header}
+                </ModalHeader>
+              {/if}
+              {#if body}
+                <ModalBody>
+                  <slot />
+                </ModalBody>
+              {:else}
+                <slot />
+              {/if}
+            </div>
           </div>
         </div>
-      </div>
-      {#if backdrop && !staticModal}
-        <div
-          transition:fadeTransition={{ duration: backdropDuration }}
-          class={classnames('modal-backdrop', 'show', backdropClassName)} />
       {/if}
-    {/if}
-  </div>
+    </div>
+  </svelte:component>
 {/if}
+{#if backdrop && !staticModal}
+  <svelte:component this={outer}>
+    <ModalBackdrop {fade} {isOpen} />
+  </svelte:component>
+{/if}
+
+<style>
+  :global(.modal-open) {
+    overflow: hidden;
+    padding-right: 0;
+  }
+</style>

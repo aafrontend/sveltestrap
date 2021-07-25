@@ -1,12 +1,15 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface ICardImgProps {
-  top?: boolean;
-  bottom?: boolean;
-
-  src?: string;
+export interface CardImgProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['img']> {
   alt?: string;
+  bottom?: boolean;
+  src?: string;
+  top?: boolean;
 }
 
-declare class CardImg extends LocalSvelteComponent<ICardImgProps> {}
-export default CardImg;
+export default class CardImg extends SvelteComponentTyped<
+  CardImgProps,
+  {},
+  {}
+> {}

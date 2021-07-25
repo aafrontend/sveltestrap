@@ -1,29 +1,30 @@
 <script>
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { collapseIn, collapseOut } from './transitions';
   import classnames from './utils';
+  import toggle from './toggle';
 
-  import { createEventDispatcher } from 'svelte';
-  import { slide } from 'svelte/transition';
-  const noop = () => undefined;
+  const dispatch = createEventDispatcher();
 
   export let isOpen = false;
   let className = '';
   export { className as class };
   export let navbar = false;
-  export let onEntering = noop;
-  export let onEntered = noop;
-  export let onExiting = noop;
-  export let onExited = noop;
+  export let onEntering = () => dispatch('opening');
+  export let onEntered = () => dispatch('open');
+  export let onExiting = () => dispatch('closing');
+  export let onExited = () => dispatch('close');
   export let expand = false;
+  export let toggler = null;
 
-  $: classes = classnames(
-    className,
-    // collapseClass,
-    navbar && 'navbar-collapse'
-  );
+  onMount(() => toggle(toggler, () => (isOpen = !isOpen)));
+
+  $: classes = classnames(className, navbar && 'navbar-collapse');
 
   let windowWidth = 0;
-  let _wasMaximazed = false;
+  let _wasMaximized = false;
 
+  // TODO wrong to hardcode these here - come from Bootstrap CSS only
   const minWidth = {};
   minWidth['xs'] = 0;
   minWidth['sm'] = 576;
@@ -31,22 +32,18 @@
   minWidth['lg'] = 992;
   minWidth['xl'] = 1200;
 
-  const dispatch = createEventDispatcher();
-
   function notify() {
-    dispatch('update', {
-      isOpen: isOpen
-    });
+    dispatch('update', isOpen);
   }
 
   $: if (navbar && expand) {
     if (windowWidth >= minWidth[expand] && !isOpen) {
       isOpen = true;
-      _wasMaximazed = true;
+      _wasMaximized = true;
       notify();
-    } else if (windowWidth < minWidth[expand] && _wasMaximazed) {
+    } else if (windowWidth < minWidth[expand] && _wasMaximized) {
       isOpen = false;
-      _wasMaximazed = false;
+      _wasMaximized = false;
       notify();
     }
   }
@@ -59,7 +56,8 @@
     style={navbar ? undefined : 'overflow: hidden;'}
     {...$$restProps}
     class={classes}
-    transition:slide|local
+    in:collapseIn
+    out:collapseOut
     on:introstart
     on:introend
     on:outrostart
@@ -67,7 +65,8 @@
     on:introstart={onEntering}
     on:introend={onEntered}
     on:outrostart={onExiting}
-    on:outroend={onExited}>
+    on:outroend={onExited}
+  >
     <slot />
   </div>
 {/if}

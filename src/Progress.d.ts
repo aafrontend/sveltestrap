@@ -1,15 +1,20 @@
-import { LocalSvelteComponent, BackgroundColor } from './shared';
+import { SvelteComponentTyped } from 'svelte';
+import { BackgroundColor } from './shared';
 
-export interface IProgressProps {
-  bar?: boolean;
-  multi?: boolean;
-  value?: string | number;
-  max?: string | number;
+export interface ProgressProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
   animated?: boolean;
-  striped?: boolean;
-  color?: BackgroundColor;
+  bar?: boolean;
   barClassName?: string;
+  color?: BackgroundColor;
+  max?: string | number;
+  multi?: boolean;
+  striped?: boolean;
+  value?: string | number;
 }
 
-declare class Progress extends LocalSvelteComponent<IProgressProps> {}
-export default Progress;
+export default class Progress extends SvelteComponentTyped<
+  ProgressProps,
+  {},
+  { default: {} }
+> {}

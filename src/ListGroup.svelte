@@ -4,14 +4,20 @@
   let className = '';
   export { className as class };
   export let flush = false;
+  export let numbered = false;
 
-  $: classes = classnames(
-    className,
-    'list-group',
-    flush ? 'list-group-flush' : false
-  );
+  $: classes = classnames(className, 'list-group', {
+    'list-group-flush': flush,
+    'list-group-numbered': numbered
+  });
 </script>
 
-<ul {...$$restProps} class={classes}>
-  <slot />
-</ul>
+{#if numbered}
+  <ol {...$$restProps} class={classes}>
+    <slot />
+  </ol>
+{:else}
+  <ul {...$$restProps} class={classes}>
+    <slot />
+  </ul>
+{/if}

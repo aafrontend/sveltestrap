@@ -1,9 +1,13 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface ICarouselItemProps {
-  itemIndex?: number;
+export interface CarouselItemProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
   activeIndex?: number;
+  itemIndex?: number;
 }
 
-declare class CarouselItem extends LocalSvelteComponent<ICarouselItemProps> {}
-export default CarouselItem;
+export default class CarouselItem extends SvelteComponentTyped<
+  CarouselItemProps,
+  {},
+  { default: {} }
+> {}

@@ -5,13 +5,11 @@
     DropdownMenu,
     DropdownToggle
   } from 'sveltestrap';
-
-  let isOpen = false;
 </script>
 
-<Dropdown {isOpen} toggle={() => (isOpen = !isOpen)}>
+<Dropdown>
   <DropdownToggle caret>Dropdown's menu is right-aligned</DropdownToggle>
-  <DropdownMenu right>
+  <DropdownMenu end>
     <DropdownItem header>Header</DropdownItem>
     <DropdownItem disabled>Action</DropdownItem>
     <DropdownItem>Another Action</DropdownItem>

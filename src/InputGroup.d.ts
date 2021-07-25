@@ -1,8 +1,12 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IInputGroupProps {
+export interface InputGroupProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
   size?: 'sm' | 'lg';
 }
 
-declare class InputGroup extends LocalSvelteComponent<IInputGroupProps> {}
-export default InputGroup;
+export default class InputGroup extends SvelteComponentTyped<
+  InputGroupProps,
+  {},
+  { default: {} }
+> {}

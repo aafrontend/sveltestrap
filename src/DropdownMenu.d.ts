@@ -1,8 +1,14 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IDropdownMenuProps {
+export interface DropdownMenuProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
+  dark?: boolean;
+  end?: boolean;
   right?: boolean;
 }
 
-declare class DropdownMenu extends LocalSvelteComponent<IDropdownMenuProps> {}
-export default DropdownMenu;
+export default class DropdownMenu extends SvelteComponentTyped<
+  DropdownMenuProps,
+  {},
+  { default: {} }
+> {}

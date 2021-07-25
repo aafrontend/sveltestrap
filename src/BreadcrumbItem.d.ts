@@ -1,10 +1,12 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IBreadcrumbItemProps {
+export interface BreadcrumbItemProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['li']> {
   active?: boolean;
 }
 
-declare class BreadcrumbItem extends LocalSvelteComponent<
-  IBreadcrumbItemProps
+export default class BreadcrumbItem extends SvelteComponentTyped<
+  BreadcrumbItemProps,
+  {},
+  { default: {} }
 > {}
-export default BreadcrumbItem;

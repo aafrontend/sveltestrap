@@ -56,19 +56,6 @@ export function getColumnSizeClass(isXs, colWidth, colSize) {
   return isXs ? `col-${colSize}` : `col-${colWidth}-${colSize}`;
 }
 
-export function clean($$props) {
-  // TODO support keys
-  // eslint-disable-next-line no-unused-vars
-  const { children, $$scope, $$slots } = $$props;
-  const rest = {};
-  for (const key of Object.keys($$props)) {
-    if (key !== 'children' && key !== '$$scope' && key !== '$$slots') {
-      rest[key] = $$props[key];
-    }
-  }
-  return rest;
-}
-
 export function browserEvent(target, ...args) {
   target.addEventListener(...args);
 
@@ -106,4 +93,38 @@ function toClassName(value) {
 
 export default function classnames(...args) {
   return args.map(toClassName).filter(Boolean).join(' ');
+}
+
+export function getTransitionDuration(element) {
+  if (!element) return 0;
+
+  // Get transition-duration of the element
+  let { transitionDuration, transitionDelay } =
+    window.getComputedStyle(element);
+
+  const floatTransitionDuration = Number.parseFloat(transitionDuration);
+  const floatTransitionDelay = Number.parseFloat(transitionDelay);
+
+  // Return 0 if element or transition duration is not found
+  if (!floatTransitionDuration && !floatTransitionDelay) {
+    return 0;
+  }
+
+  // If multiple durations are defined, take the first
+  transitionDuration = transitionDuration.split(',')[0];
+  transitionDelay = transitionDelay.split(',')[0];
+
+  return (
+    (Number.parseFloat(transitionDuration) +
+      Number.parseFloat(transitionDelay)) *
+    1000
+  );
+}
+
+export function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c == 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }

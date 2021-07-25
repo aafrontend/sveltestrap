@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Form, FormGroup, FormText, Input, Label } from 'sveltestrap';
+  let radioGroup;
 </script>
 
 <Form>
@@ -13,7 +14,8 @@
       type="email"
       name="email"
       id="exampleEmail"
-      placeholder="with a placeholder" />
+      placeholder="with a placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="examplePassword">Password</Label>
@@ -21,7 +23,8 @@
       type="password"
       name="password"
       id="examplePassword"
-      placeholder="password placeholder" />
+      placeholder="password placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleUrl">Url</Label>
@@ -29,7 +32,20 @@
       type="url"
       name="url"
       id="exampleUrl"
-      placeholder="url placeholder" />
+      placeholder="url placeholder"
+    />
+  </FormGroup>
+  <FormGroup>
+    <Label for="exampleRange">Range</Label>
+    <Input
+      type="range"
+      name="range"
+      id="exampleRange"
+      min={0}
+      max={100}
+      step={10}
+      placeholder="Range placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleNumber">Number</Label>
@@ -37,15 +53,17 @@
       type="number"
       name="number"
       id="exampleNumber"
-      placeholder="number placeholder" />
+      placeholder="number placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleDatetime">Datetime</Label>
     <Input
-      type="datetime"
+      type="datetime-local"
       name="datetime"
       id="exampleDatetime"
-      placeholder="datetime placeholder" />
+      placeholder="datetime placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleDate">Date</Label>
@@ -53,7 +71,8 @@
       type="date"
       name="date"
       id="exampleDate"
-      placeholder="date placeholder" />
+      placeholder="date placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleTime">Time</Label>
@@ -61,7 +80,8 @@
       type="time"
       name="time"
       id="exampleTime"
-      placeholder="time placeholder" />
+      placeholder="time placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleColor">Color</Label>
@@ -69,7 +89,8 @@
       type="color"
       name="color"
       id="exampleColor"
-      placeholder="color placeholder" />
+      placeholder="color placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleSearch">Search</Label>
@@ -77,7 +98,8 @@
       type="search"
       name="search"
       id="exampleSearch"
-      placeholder="search placeholder" />
+      placeholder="search placeholder"
+    />
   </FormGroup>
   <FormGroup>
     <Label for="exampleSelect">Select</Label>
@@ -111,16 +133,37 @@
       bit lighter and easily wraps to a new line.
     </FormText>
   </FormGroup>
-  <FormGroup check>
-    <Label check>
-      <Input type="radio" />
-      Option one is this and that—be sure to include why it's great
-    </Label>
+  <FormGroup>
+    <Input
+      id="r1"
+      type="radio"
+      bind:group={radioGroup}
+      value="eenie"
+      label="Eenie"
+    />
+    <Input
+      id="r2"
+      type="radio"
+      bind:group={radioGroup}
+      value="meanie"
+      label="Meanie"
+    />
+    <Input
+      id="r3"
+      type="radio"
+      bind:group={radioGroup}
+      value="minie"
+      label="Minie"
+    />
+    <Input
+      id="r4"
+      type="radio"
+      bind:group={radioGroup}
+      value="moe"
+      label="Moe"
+    />
   </FormGroup>
-  <FormGroup check>
-    <Label check>
-      <Input type="checkbox" />
-      Check me out
-    </Label>
+  <FormGroup>
+    <Input id="c1" type="checkbox" label="Check me out" />
   </FormGroup>
 </Form>

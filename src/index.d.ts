@@ -1,3 +1,6 @@
+import Accordion from './Accordion';
+import AccordionHeader from './AccordionHeader';
+import AccordionItem from './AccordionItem';
 import Alert from './Alert';
 import Badge from './Badge';
 import Breadcrumb from './Breadcrumb';
@@ -25,30 +28,33 @@ import CarouselControl from './CarouselControl';
 import CarouselIndicators from './CarouselIndicators';
 import CarouselItem from './CarouselItem';
 import Col from './Col';
+import Colgroup from './Colgroup';
 import Collapse from './Collapse';
+import Column from './Column';
 import Container from './Container';
-import CustomInput from './CustomInput';
 import Dropdown from './Dropdown';
 import DropdownItem from './DropdownItem';
 import DropdownMenu from './DropdownMenu';
 import DropdownToggle from './DropdownToggle';
 import Fade from './Fade';
+import Figure from './Figure';
 import Form from './Form';
+import FormCheck from './FormCheck';
 import FormFeedback from './FormFeedback';
 import FormGroup from './FormGroup';
 import FormText from './FormText';
 import Icon from './Icon';
+import Image from './Image';
+import InlineContainer from './InlineContainer';
 import Input from './Input';
 import InputGroup from './InputGroup';
-import InputGroupAddon from './InputGroupAddon';
-import InputGroupButtonDropdown from './InputGroupButtonDropdown';
 import InputGroupText from './InputGroupText';
 import Jumbotron from './Jumbotron';
 import Label from './Label';
 import ListGroup from './ListGroup';
 import ListGroupItem from './ListGroupItem';
-import Media from './Media';
 import Modal from './Modal';
+import ModalBackdrop from './ModalBackdrop';
 import ModalBody from './ModalBody';
 import ModalFooter from './ModalFooter';
 import ModalHeader from './ModalHeader';
@@ -58,27 +64,33 @@ import NavLink from './NavLink';
 import Navbar from './Navbar';
 import NavbarBrand from './NavbarBrand';
 import NavbarToggler from './NavbarToggler';
+import Offcanvas from './Offcanvas';
+import OffcanvasBody from './OffcanvasBody';
+import OffcanvasHeader from './OffcanvasHeader';
 import Pagination from './Pagination';
 import PaginationItem from './PaginationItem';
 import PaginationLink from './PaginationLink';
+import Portal from './Portal';
 import Popover from './Popover';
 import Progress from './Progress';
+import ResponsiveContainer from './ResponsiveContainer';
 import Row from './Row';
 import Spinner from './Spinner';
+import Styles from './Styles';
 import TabContent from './TabContent';
 import TabPane from './TabPane';
 import Table from './Table';
+import TableFooter from './TableFooter';
+import TableHeader from './TableHeader';
 import Toast from './Toast';
 import ToastBody from './ToastBody';
 import ToastHeader from './ToastHeader';
-import Tooltip from './ToastHeader';
-import { UncontrolledAlert } from './UncontrolledAlert';
-import { UncontrolledButtonDropdown } from './UncontrolledButtonDropdown';
-import UncontrolledCollapse from './UncontrolledCollapse';
-import UncontrolledDropdown from './UncontrolledDropdown';
-import UncontrolledFade from './UncontrolledFade';
+import Tooltip from './Tooltip';
 
 export {
+  Accordion,
+  AccordionHeader,
+  AccordionItem,
   Alert,
   Badge,
   Breadcrumb,
@@ -106,30 +118,33 @@ export {
   CarouselIndicators,
   CarouselItem,
   Col,
+  Colgroup,
   Collapse,
+  Column,
   Container,
-  CustomInput,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   Fade,
+  Figure,
   Form,
+  FormCheck,
   FormFeedback,
   FormGroup,
   FormText,
   Icon,
+  Image,
+  InlineContainer,
   Input,
   InputGroup,
-  InputGroupAddon,
-  InputGroupButtonDropdown,
   InputGroupText,
   Jumbotron,
   Label,
   ListGroup,
   ListGroupItem,
-  Media,
   Modal,
+  ModalBackdrop,
   ModalBody,
   ModalFooter,
   ModalHeader,
@@ -139,23 +154,26 @@ export {
   Navbar,
   NavbarBrand,
   NavbarToggler,
+  Offcanvas,
+  OffcanvasBody,
+  OffcanvasHeader,
   Pagination,
   PaginationItem,
   PaginationLink,
   Popover,
+  Portal,
   Progress,
+  ResponsiveContainer,
   Row,
   Spinner,
+  Styles,
   TabContent,
   TabPane,
   Table,
+  TableFooter,
+  TableHeader,
   Toast,
   ToastBody,
   ToastHeader,
-  Tooltip,
-  UncontrolledAlert,
-  UncontrolledButtonDropdown,
-  UncontrolledCollapse,
-  UncontrolledDropdown,
-  UncontrolledFade
+  Tooltip
 };

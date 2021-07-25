@@ -1,10 +1,24 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IToastProps {
-  isOpen?: boolean;
-  fade?: boolean;
+export interface ToastProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
+  autohide?: boolean;
+  body?: boolean;
+  delay?: number;
   duration?: number;
+  fade?: boolean;
+  header?: string;
+  isOpen?: boolean;
+  toggle?: () => void;
 }
 
-declare class Toast extends LocalSvelteComponent<IToastProps> {}
-export default Toast;
+export default class Toast extends SvelteComponentTyped<
+  ToastProps,
+  {
+    open: CustomEvent<void>;
+    opening: CustomEvent<void>;
+    closing: CustomEvent<void>;
+    close: CustomEvent<void>;
+  },
+  { default: {} }
+> {}

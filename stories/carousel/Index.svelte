@@ -11,14 +11,18 @@
   import WithCaptions from './WithCaptions.svelte';
   import WithCaptionsSource from '!!raw-loader!./WithCaptions.svelte';
 
+  import Dark from './Dark.svelte';
+  import DarkSource from '!!raw-loader!./Dark.svelte';
+
   import Example from '../Example.svelte';
 </script>
 
 <h1>Carousel</h1>
 
 <a
-  href="https://getbootstrap.com/docs/4.5/components/carousel/"
-  target="_blank">
+  href="https://getbootstrap.com/docs/5.0/components/carousel/"
+  target="_blank"
+>
   Bootstrap Carousel
 </a>
 
@@ -36,4 +40,8 @@
 
 <Example title="With Captions" source={WithCaptionsSource}>
   <WithCaptions />
+</Example>
+
+<Example title="Dark variant" source={DarkSource}>
+  <Dark />
 </Example>

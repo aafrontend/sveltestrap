@@ -1,9 +1,10 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IJumbotronProps {
-  tag?: string;
-  fluid?: boolean;
-}
+export interface JumbotronProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {}
 
-declare class Jumbotron extends LocalSvelteComponent<IJumbotronProps> {}
-export default Jumbotron;
+export default class Jumbotron extends SvelteComponentTyped<
+  JumbotronProps,
+  {},
+  { default: {} }
+> {}

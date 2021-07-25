@@ -1,4 +1,10 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-declare class ModalBody extends LocalSvelteComponent {}
-export default ModalBody;
+export interface ModalBodyProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {}
+
+export default class ModalBody extends SvelteComponentTyped<
+  ModalBodyProps,
+  {},
+  { default: {} }
+> {}

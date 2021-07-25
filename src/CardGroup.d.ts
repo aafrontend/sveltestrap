@@ -1,4 +1,10 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-declare class CardGroup extends LocalSvelteComponent {}
-export default CardGroup;
+export interface CardGroupProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {}
+
+export default class CardGroup extends SvelteComponentTyped<
+  CardGroupProps,
+  {},
+  { default: {} }
+> {}

@@ -1,31 +1,41 @@
-import { IFadeProps } from './Fade';
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
+import { FadeProps } from './Fade';
+import { Breakpoints, ContainerType } from './shared';
 
-export interface IModalProps {
-  isOpen?: boolean;
+export interface ModalProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
   autoFocus?: boolean;
-  backdropDuration?: number;
+  backdrop?: boolean | 'static';
+  body?: boolean;
+  centered?: boolean;
+  container?: ContainerType;
+  contentClassName?: string;
+  fade?: boolean;
+  fullscreen?: boolean | Breakpoints;
+  header?: string;
+  isOpen?: boolean;
+  keyboard?: boolean;
+  labelledBy?: string;
+  modalClassName?: string;
+  returnFocusAfterClose?: boolean;
+  scrollable?: boolean;
   size?: string;
   toggle?: () => void;
-  keyboard?: boolean;
-  backdrop?: boolean | 'static';
-  scrollable?: boolean;
-  onEnter?: () => void;
-  onExit?: () => void;
-  onOpened?: () => void;
-  onClosed?: () => void;
-  wrapClassName?: string;
-  modalClassName?: string;
-  backdropClassName?: string;
-  contentClassName?: string;
-  zIndex?: number | string;
-  fade?: boolean;
-  centered?: boolean;
-  labelledBy?: string;
   unmountOnClose?: boolean;
-  returnFocusAfterClose?: boolean;
-  transitionOptions?: IFadeProps | {};
+  wrapClassName?: string;
+  zIndex?: number | string;
 }
 
-declare class Modal extends LocalSvelteComponent<IModalProps> {}
-export default Modal;
+export default class Modal extends SvelteComponentTyped<
+  ModalProps,
+  {
+    open: CustomEvent<void>;
+    opening: CustomEvent<void>;
+    closing: CustomEvent<void>;
+    close: CustomEvent<void>;
+  },
+  {
+    default: {};
+    external: {};
+  }
+> {}

@@ -8,15 +8,19 @@
   export let color = 'success';
   export let closeClassName = '';
   export let closeAriaLabel = 'Close';
+  export let dismissible = false;
+  export let heading = undefined;
   export let isOpen = true;
   export let toggle = undefined;
   export let fade = true;
   export let transition = { duration: fade ? 400 : 0 };
 
+  $: showClose = dismissible || toggle;
+  $: handleToggle = toggle || (() => (isOpen = false));
   $: classes = classnames(className, 'alert', `alert-${color}`, {
-    'alert-dismissible': toggle
+    'alert-dismissible': showClose
   });
-  $: closeClassNames = classnames('close', closeClassName);
+  $: closeClassNames = classnames('btn-close', closeClassName);
 </script>
 
 {#if isOpen}
@@ -24,15 +28,20 @@
     {...$$restProps}
     transition:fadeTransition={transition}
     class={classes}
-    role="alert">
-    {#if toggle}
+    role="alert"
+  >
+    {#if heading || $$slots.heading}
+      <h4 class="alert-heading">
+        {heading}<slot name="heading" />
+      </h4>
+    {/if}
+    {#if showClose}
       <button
         type="button"
         class={closeClassNames}
         aria-label={closeAriaLabel}
-        on:click={toggle}>
-        <span aria-hidden="true">×</span>
-      </button>
+        on:click={handleToggle}
+      />
     {/if}
     {#if children}
       {children}

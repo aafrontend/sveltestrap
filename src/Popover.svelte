@@ -2,11 +2,14 @@
   import { onMount } from 'svelte';
   import { createPopper } from '@popperjs/core/dist/esm/popper';
   import classnames from './utils';
+  import InlineContainer from './InlineContainer.svelte';
+  import Portal from './Portal.svelte';
 
   let className = '';
   export { className as class };
   export let animation = true;
   export let children = undefined;
+  export let container = undefined;
   export let dismissible = false;
   export let isOpen = false;
   export let placement = 'top';
@@ -16,6 +19,7 @@
   let targetEl;
   let popoverEl;
   let popperInstance;
+  let bsPlacement;
   let popperPlacement = placement;
 
   const checkPopperPlacement = {
@@ -49,9 +53,9 @@
     }
   }
 
-  const open = () => isOpen = true;
-  const close = () => isOpen = false;
-  const toggle = () => isOpen = !isOpen;
+  const open = () => (isOpen = true);
+  const close = () => (isOpen = false);
+  const toggle = () => (isOpen = !isOpen);
 
   onMount(() => {
     targetEl = document.querySelector(`#${target}`);
@@ -91,32 +95,43 @@
     throw new Error('Need target!');
   }
 
+  $: {
+    if (popperPlacement === 'left') bsPlacement = 'start';
+    else if (popperPlacement === 'right') bsPlacement = 'end';
+    else bsPlacement = popperPlacement;
+  }
+
   $: classes = classnames(
     className,
     'popover',
     animation ? 'fade' : false,
-    `bs-popover-${popperPlacement}`,
+    `bs-popover-${bsPlacement}`,
     isOpen ? 'show' : false
   );
+
+  $: outer = container === 'inline' ? InlineContainer : Portal;
 </script>
 
 {#if isOpen}
-  <div
-    bind:this={popoverEl}
-    {...$$restProps}
-    class={classes}
-    role="tooltip"
-    x-placement={popperPlacement}>
-    <div class="arrow" data-popper-arrow />
-    <h3 class="popover-header">
-      <slot name="title">{title}</slot>
-    </h3>
-    <div class="popover-body">
-      {#if children}
-        {children}
-      {:else}
-        <slot />
-      {/if}
+  <svelte:component this={outer}>
+    <div
+      bind:this={popoverEl}
+      {...$$restProps}
+      class={classes}
+      role="tooltip"
+      x-placement={popperPlacement}
+    >
+      <div class="popover-arrow" data-popper-arrow />
+      <h3 class="popover-header">
+        <slot name="title">{title}</slot>
+      </h3>
+      <div class="popover-body">
+        {#if children}
+          {children}
+        {:else}
+          <slot />
+        {/if}
+      </div>
     </div>
-  </div>
+  </svelte:component>
 {/if}

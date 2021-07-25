@@ -1,10 +1,13 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IModalHeaderProps {
+export interface ModalHeaderProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
   ariaToggle?: string;
   toggle?: () => void;
-  charCode?: number;
 }
 
-declare class ModalHeader extends LocalSvelteComponent<IModalHeaderProps> {}
-export default ModalHeader;
+export default class ModalHeader extends SvelteComponentTyped<
+  ModalHeaderProps,
+  {},
+  { default: {}; close: {} }
+> {}

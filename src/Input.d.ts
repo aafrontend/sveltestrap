@@ -1,51 +1,54 @@
-import { LocalSvelteComponent, Color } from './shared';
+import { SvelteComponentTyped } from 'svelte';
+import { Color } from './shared';
 
 export type InputType =
-  | 'text'
-  | 'email'
-  | 'select'
-  | 'file'
-  | 'radio'
-  | 'checkbox'
-  | 'textarea'
   | 'button'
-  | 'reset'
-  | 'submit'
+  | 'checkbox'
+  | 'color'
   | 'date'
   | 'datetime-local'
-  | 'hidden'
-  | 'image'
+  | 'email'
+  | 'file'
   | 'month'
   | 'number'
-  | 'range'
-  | 'search'
-  | 'tel'
-  | 'url'
-  | 'week'
   | 'password'
-  | 'datetime'
+  | 'radio'
+  | 'range'
+  | 'reset'
+  | 'search'
+  | 'select'
+  | 'submit'
+  | 'switch'
+  | 'tel'
+  | 'text'
+  | 'textarea'
   | 'time'
-  | 'color';
+  | 'url'
+  | 'week';
 
-export interface IInputProps {
-  type?: InputType;
-  size?: string;
+export interface InputProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['input']> {
   bsSize?: 'lg' | 'sm';
   color?: Color;
-  checked?: boolean;
-  valid?: boolean;
+  feedback?: string | string[];
+  inner?: HTMLElement;
   invalid?: boolean;
+  label?: string;
   plaintext?: boolean;
-  addon?: boolean;
-  value?: string;
-  files?: string;
-  readonly?: boolean;
-  multiple?: boolean;
-  id?: string;
-  name?: string;
-  placeholder?: string;
-  disabled?: boolean;
+  type?: InputType;
+  valid?: boolean;
 }
 
-declare class Input extends LocalSvelteComponent<IInputProps> {}
-export default Input;
+export default class Input extends SvelteComponentTyped<
+  InputProps,
+  {
+    blur: WindowEventMap['blur'];
+    focus: WindowEventMap['focus'];
+    keydown: WindowEventMap['keydown'];
+    keypress: WindowEventMap['keypress'];
+    keyup: WindowEventMap['keyup'];
+    change: WindowEventMap['change'];
+    input: WindowEventMap['input'];
+  },
+  { default: {} }
+> {}

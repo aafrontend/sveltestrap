@@ -1,3 +1,7 @@
+export declare type Breakpoints = 'sm' | 'md' | 'lg' | 'xl';
+
+export declare type ContainerType = 'body' | 'inline';
+
 /**
  * Valid Bootstrap colors
  */
@@ -11,9 +15,7 @@ export declare type Color =
   | 'light'
   | 'dark';
 
-declare type BackgroundOnlyColor =
-  | 'white'
-  | 'transparent';
+declare type BackgroundOnlyColor = 'white' | 'transparent';
 
 declare type TextOnlyColor =
   | 'body'
@@ -25,30 +27,10 @@ declare type TextOnlyColor =
 export declare type BackgroundColor = Color | BackgroundOnlyColor;
 export declare type TextColor = Color | TextOnlyColor;
 
-export declare type Direction = 'up' | 'down' | 'left' | 'right';
-
-type LocalSvelteProps = {
-  children?: any;
-  class?: string;
-  [key: string]: any;
-};
-
-/**
- * Local svelte class for adding typescript definitions for svelte components
- *
- */
-export declare class LocalSvelteComponent<Props = {}> {
-  constructor(props: Props & LocalSvelteProps);
-  $on<T = any>(
-    event: string,
-    callback: (event: CustomEvent<T>) => void
-  ): () => void;
-  $$prop_def: Props & LocalSvelteProps;
-  render: undefined;
-  context: undefined;
-  setState: undefined;
-  forceUpdate: undefined;
-  props: undefined;
-  state: undefined;
-  refs: undefined;
-}
+export declare type Direction =
+  | 'up'
+  | 'down'
+  | 'left'
+  | 'right'
+  | 'start'
+  | 'end';

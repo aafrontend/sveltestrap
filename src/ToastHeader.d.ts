@@ -1,11 +1,14 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IToastHeaderProps {
+export interface ToastHeaderProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
   toggle?: () => void;
   icon?: any;
-  charCode?: string | number;
   closeAriaLabel?: string;
 }
 
-declare class ToastHeader extends LocalSvelteComponent<IToastHeaderProps> {}
-export default ToastHeader;
+export default class ToastHeader extends SvelteComponentTyped<
+  ToastHeaderProps,
+  {},
+  { default: {}; close: {}; icon: {} }
+> {}

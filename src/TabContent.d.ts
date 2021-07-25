@@ -1,8 +1,13 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface ITabContentProps {
-  activeTab?: number | string;
+export interface TabContentProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
+  pills?: boolean;
+  vertical?: boolean;
 }
 
-declare class TabContent extends LocalSvelteComponent<ITabContentProps> {}
-export default TabContent;
+export default class TabContent extends SvelteComponentTyped<
+  TabContentProps,
+  {},
+  { default: {} }
+> {}

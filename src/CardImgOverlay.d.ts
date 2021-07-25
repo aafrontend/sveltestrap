@@ -1,4 +1,10 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-declare class CardImgOverlay extends LocalSvelteComponent {}
-export default CardImgOverlay;
+export interface CardImgOverlayProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {}
+
+export default class CardImgOverlay extends SvelteComponentTyped<
+  CardImgOverlayProps,
+  {},
+  { default: {} }
+> {}

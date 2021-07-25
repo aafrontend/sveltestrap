@@ -7,20 +7,23 @@
     NavItem,
     NavLink,
     Navbar,
-    UncontrolledDropdown
+    Dropdown
   } from 'sveltestrap';
 </script>
 
-<Navbar color="light" light expand="md">
-  <Nav class="ml-auto" navbar>
+<Navbar color="dark" dark expand="md">
+  <Nav navbar>
     <NavItem>
       <NavLink href="/components/">Inactive Link</NavLink>
     </NavItem>
-    <UncontrolledDropdown setActiveFromChild>
+    <Dropdown nav setActiveFromChild>
       <DropdownToggle nav class="nav-link" caret>Dropdown</DropdownToggle>
-      <DropdownMenu>
-        <DropdownItem tag="a" href="/blah" active>Link</DropdownItem>
+      <DropdownMenu dark>
+        <DropdownItem href="#" active>Lancelot</DropdownItem>
+        <DropdownItem href="#">Link</DropdownItem>
+        <DropdownItem href="#">Secret</DropdownItem>
+        <DropdownItem href="#">Chimp</DropdownItem>
       </DropdownMenu>
-    </UncontrolledDropdown>
+    </Dropdown>
   </Nav>
 </Navbar>

@@ -20,8 +20,8 @@ beforeEach(() => {
 const TOOLTIP_POSTION_CLASS = {
   top: 'bs-tooltip-top',
   bottom: 'bs-tooltip-bottom',
-  left: 'bs-tooltip-left',
-  right: 'bs-tooltip-right'
+  left: 'bs-tooltip-start',
+  right: 'bs-tooltip-end'
 };
 
 describe('Tooltip', () => {
@@ -51,9 +51,9 @@ describe('Tooltip', () => {
   });
 
   it('should throw error when there is no target', () => {
-    try{
+    try {
       renderTooltip();
-    } catch(error) {
+    } catch (error) {
       expect(error.message).toBe('Need target!');
     }
   });

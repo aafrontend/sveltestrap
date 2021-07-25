@@ -1,8 +1,15 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface ICardLinkProps {
+export interface CardLinkProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['a']> {
+  /**
+   * @default ''
+   */
   href?: string;
 }
 
-declare class CardLink extends LocalSvelteComponent<ICardLinkProps> {}
-export default CardLink;
+export default class CardLink extends SvelteComponentTyped<
+  CardLinkProps,
+  {},
+  { default: {} }
+> {}

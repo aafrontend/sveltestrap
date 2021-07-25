@@ -1,11 +1,13 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface ICarouselIndicatorsProps {
-  items: any[];
+export interface CarouselIndicatorsProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['ol']> {
   activeIndex: number;
+  items: any[];
 }
 
-declare class CarouselIndicators extends LocalSvelteComponent<
-  ICarouselIndicatorsProps
+export default class CarouselIndicators extends SvelteComponentTyped<
+  CarouselIndicatorsProps,
+  {},
+  {}
 > {}
-export default CarouselIndicators;

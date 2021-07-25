@@ -1,4 +1,10 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-declare class ToastBody extends LocalSvelteComponent {}
-export default ToastBody;
+export interface ToastBodyProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {}
+
+export default class ToastBody extends SvelteComponentTyped<
+  ToastBodyProps,
+  {},
+  { default: {} }
+> {}

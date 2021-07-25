@@ -1,10 +1,14 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface INavLinkProps {
+export interface NavLinkProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['a']> {
   disabled?: boolean;
   active?: boolean;
   href?: string;
 }
 
-declare class NavLink extends LocalSvelteComponent<INavLinkProps> {}
-export default NavLink;
+export default class NavLink extends SvelteComponentTyped<
+  NavLinkProps,
+  { click: WindowEventMap['click'] },
+  { default: {} }
+> {}

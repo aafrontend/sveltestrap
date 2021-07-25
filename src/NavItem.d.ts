@@ -1,8 +1,12 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface INavItemProps {
+export interface NavItemProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['li']> {
   active?: boolean;
 }
 
-declare class NavItem extends LocalSvelteComponent<INavItemProps> {}
-export default NavItem;
+export default class NavItem extends SvelteComponentTyped<
+  NavItemProps,
+  {},
+  { default: {} }
+> {}

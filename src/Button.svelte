@@ -10,6 +10,7 @@
   export let color = 'secondary';
   export let disabled = false;
   export let href = '';
+  export let inner = undefined;
   export let outline = false;
   export let size = null;
   export let style = '';
@@ -19,11 +20,10 @@
 
   $: classes = classnames(
     className,
-    { close },
-    close || 'btn',
+    close ? 'btn-close' : 'btn',
     close || `btn${outline ? '-outline' : ''}-${color}`,
     size ? `btn-${size}` : false,
-    block ? 'btn-block' : false,
+    block ? 'd-block w-100' : false,
     { active }
   );
 
@@ -35,10 +35,12 @@
     {...$$restProps}
     class={classes}
     {disabled}
+    bind:this={inner}
     on:click
     {href}
     aria-label={ariaLabel || defaultAriaLabel}
-    {style}>
+    {style}
+  >
     {#if children}
       {children}
     {:else}
@@ -50,14 +52,14 @@
     {...$$restProps}
     class={classes}
     {disabled}
+    bind:this={inner}
     on:click
     {value}
     aria-label={ariaLabel || defaultAriaLabel}
-    {style}>
+    {style}
+  >
     <slot>
-      {#if close}
-        <span aria-hidden="true">×</span>
-      {:else if children}
+      {#if children}
         {children}
       {:else}
         <slot />

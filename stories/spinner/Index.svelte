@@ -10,8 +10,9 @@
 
 <h1>Spinner</h1>
 <a
-  href="https://getbootstrap.com/docs/4.5/components/spinners/"
-  target="_blank">
+  href="https://getbootstrap.com/docs/5.0/components/spinners/"
+  target="_blank"
+>
   Bootstrap Spinner
 </a>
 

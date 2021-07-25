@@ -1,60 +1,72 @@
 <script>
+  import FormCheck from './FormCheck.svelte';
+  import FormFeedback from './FormFeedback.svelte';
+
   import classnames from './utils';
 
   let className = '';
   export { className as class };
 
-  export let type = 'text';
-  export let size = undefined;
   export let bsSize = undefined;
-  export let color = undefined;
   export let checked = false;
-  export let valid = false;
+  export let color = undefined;
+  export let disabled = undefined;
+  export let feedback = undefined;
+  export let files = undefined;
+  export let group = undefined;
+  export let inner = undefined;
   export let invalid = false;
-  export let plaintext = false;
-  export let addon = false;
-  export let value = '';
-  export let files = '';
-  export let readonly = undefined;
+  export let label = undefined;
   export let multiple = undefined;
   export let name = '';
   export let placeholder = '';
-  export let disabled = undefined;
+  export let plaintext = false;
+  export let readonly = undefined;
+  export let size = undefined;
+  export let type = 'text';
+  export let valid = false;
+  export let value = '';
 
   let classes;
   let tag;
   $: {
-    const checkInput = ['radio', 'checkbox'].indexOf(type) > -1;
     const isNotaNumber = new RegExp('\\D', 'g');
 
-    const fileInput = type === 'file';
-    const textareaInput = type === 'textarea';
-    const rangeInput = type === 'range';
-    const selectInput = type === 'select';
-    const buttonInput =
-      type === 'button' || type === 'reset' || type === 'submit';
-    const unsupportedInput = type === 'hidden' || type === 'image';
-    tag = selectInput || textareaInput ? type : 'input';
-
+    let isBtn = false;
     let formControlClass = 'form-control';
+    tag = 'input';
 
+    switch (type) {
+      case 'color':
+        formControlClass = `form-control form-control-color`;
+        break;
+      case 'range':
+        formControlClass = 'form-range';
+        break;
+      case 'select':
+        formControlClass = `form-select`;
+        tag = 'select';
+        break;
+      case 'textarea':
+        tag = 'textarea';
+        break;
+      case 'button':
+      case 'reset':
+      case 'submit':
+        formControlClass = `btn btn-${color || 'secondary'}`;
+        isBtn = true;
+        break;
+      case 'hidden':
+      case 'image':
+        formControlClass = undefined;
+        break;
+      default:
+        formControlClass = 'form-control';
+        tag = 'input';
+    }
     if (plaintext) {
       formControlClass = `${formControlClass}-plaintext`;
       tag = 'input';
-    } else if (fileInput) {
-      formControlClass = `${formControlClass}-file`;
-    } else if (checkInput) {
-      if (addon) {
-        formControlClass = null;
-      } else {
-        formControlClass = 'form-check-input';
-      }
-    } else if (buttonInput) {
-      formControlClass = `btn btn-${color || 'secondary'}`;
-    } else if (rangeInput) {
-      formControlClass = 'form-control-range';
-    } else if (unsupportedInput) {
-      formControlClass = '';
     }
 
     if (size && isNotaNumber.test(size)) {
@@ -65,13 +77,12 @@
       size = undefined;
     }
 
-    classes = classnames(
-      className,
-      invalid && 'is-invalid',
-      valid && 'is-valid',
-      bsSize ? `form-control-${bsSize}` : false,
-      formControlClass
-    );
+    classes = classnames(className, formControlClass, {
+      'is-invalid': invalid,
+      'is-valid': valid,
+      [`form-control-${bsSize}`]: bsSize && !isBtn,
+      [`btn-${bsSize}`]: bsSize && isBtn
+    });
   }
 
   const handleInput = (event) => {
@@ -83,288 +94,413 @@
   {#if type === 'text'}
     <input
       {...$$restProps}
+      class={classes}
       type="text"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
-      {readonly}
-      class={classes}
-      {name}
+      bind:this={inner}
       {disabled}
-      {placeholder} />
+      {name}
+      {placeholder}
+      {readonly}
+      {size}
+    />
   {:else if type === 'password'}
     <input
       {...$$restProps}
+      class={classes}
       type="password"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
-      {readonly}
-      class={classes}
-      {name}
+      bind:this={inner}
       {disabled}
-      {placeholder} />
+      {name}
+      {placeholder}
+      {readonly}
+      {size}
+    />
+  {:else if type === 'color'}
+    <input
+      {...$$restProps}
+      class={classes}
+      type="color"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {disabled}
+      {name}
+      {placeholder}
+      {readonly}
+    />
   {:else if type === 'email'}
     <input
       {...$$restProps}
+      class={classes}
       type="email"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
-      {readonly}
-      class={classes}
-      {name}
+      bind:this={inner}
       {disabled}
-      {placeholder} />
+      {multiple}
+      {name}
+      {placeholder}
+      {readonly}
+      {size}
+    />
   {:else if type === 'file'}
     <input
       {...$$restProps}
+      class={classes}
       type="file"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:files
-      {readonly}
-      class={classes}
-      {name}
+      bind:value
+      bind:this={inner}
       {disabled}
-      {placeholder} />
-  {:else if type === 'checkbox'}
-    <input
+      {invalid}
+      {multiple}
+      {name}
+      {placeholder}
+      {readonly}
+      {valid}
+    />
+  {:else if type === 'checkbox' || type === 'radio' || type === 'switch'}
+    <FormCheck
       {...$$restProps}
-      type="checkbox"
+      class={className}
+      size={bsSize}
+      {type}
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:checked
+      bind:group
       bind:value
-      {readonly}
-      class={classes}
-      {name}
+      bind:this={inner}
       {disabled}
-      {placeholder} />
-  {:else if type === 'radio'}
-    <input
-      {...$$restProps}
-      type="radio"
-      on:blur
-      on:focus
-      on:keydown
-      on:keypress
-      on:keyup
-      on:change
-      on:input
-      bind:value
-      {readonly}
-      class={classes}
+      {invalid}
+      {label}
       {name}
-      {disabled}
-      {placeholder} />
+      {placeholder}
+      {readonly}
+      {valid}
+    />
   {:else if type === 'url'}
     <input
       {...$$restProps}
+      class={classes}
       type="url"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
-      {readonly}
-      class={classes}
-      {name}
+      bind:this={inner}
       {disabled}
-      {placeholder} />
+      {name}
+      {placeholder}
+      {readonly}
+      {size}
+    />
   {:else if type === 'number'}
     <input
       {...$$restProps}
+      class={classes}
       type="number"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
+      bind:this={inner}
       {readonly}
-      class={classes}
       {name}
       {disabled}
-      {placeholder} />
+      {placeholder}
+    />
   {:else if type === 'date'}
     <input
       {...$$restProps}
+      class={classes}
       type="date"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
-      {readonly}
-      class={classes}
-      {name}
+      bind:this={inner}
       {disabled}
-      {placeholder} />
+      {name}
+      {placeholder}
+      {readonly}
+    />
   {:else if type === 'time'}
     <input
       {...$$restProps}
+      class={classes}
       type="time"
       on:blur
+      on:change
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
-      {readonly}
-      class={classes}
-      {name}
+      bind:this={inner}
       {disabled}
-      {placeholder} />
+      {name}
+      {placeholder}
+      {readonly}
+    />
   {:else if type === 'datetime'}
     <input
       {...$$restProps}
       type="datetime"
       on:blur
-      on:focus
-      on:keydown
-      on:keypress
-      on:keyup
       on:change
-      on:input
-      bind:value
-      {readonly}
-      class={classes}
-      {name}
-      {disabled}
-      {placeholder} />
-  {:else if type === 'color'}
-    <input
-      {...$$restProps}
-      type="color"
-      on:blur
       on:focus
+      on:input
       on:keydown
       on:keypress
       on:keyup
-      on:change
-      on:input
       bind:value
-      {readonly}
-      class={classes}
-      {name}
-      {disabled}
-      {placeholder} />
-  {:else if type === 'range'}
-    <input
-      {...$$restProps}
-      type="range"
-      on:blur
-      on:focus
-      on:keydown
-      on:keypress
-      on:keyup
-      on:change
-      on:input
-      bind:value
-      {readonly}
-      class={classes}
-      {name}
-      {disabled}
-      {placeholder} />
-  {:else if type === 'search'}
-    <input
-      {...$$restProps}
-      type="search"
-      on:blur
-      on:focus
-      on:keydown
-      on:keypress
-      on:keyup
-      on:change
-      on:input
-      bind:value
-      {readonly}
-      class={classes}
-      {name}
-      {disabled}
-      {placeholder} />
-  {:else}
-    <input
-      {...$$restProps}
-      {type}
-      on:blur
-      on:focus
-      on:keydown
-      on:keypress
-      on:keyup
-      on:input={handleInput}
-      on:change={handleInput}
+      bind:this={inner}
       {readonly}
       class={classes}
       {name}
       {disabled}
       {placeholder}
-      {value} />
+    />
+  {:else if type === 'datetime-local'}
+    <input
+      {...$$restProps}
+      class={classes}
+      type="datetime-local"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {disabled}
+      {name}
+      {placeholder}
+      {readonly}
+    />
+  {:else if type === 'month'}
+    <input
+      {...$$restProps}
+      class={classes}
+      type="month"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {disabled}
+      {name}
+      {placeholder}
+      {readonly}
+    />
+  {:else if type === 'color'}
+    <input
+      {...$$restProps}
+      type="color"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {readonly}
+      class={classes}
+      {name}
+      {disabled}
+      {placeholder}
+    />
+  {:else if type === 'range'}
+    <input
+      {...$$restProps}
+      type="range"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {readonly}
+      class={classes}
+      {name}
+      {disabled}
+      {placeholder}
+    />
+  {:else if type === 'search'}
+    <input
+      {...$$restProps}
+      class={classes}
+      type="search"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {disabled}
+      {name}
+      {placeholder}
+      {readonly}
+      {size}
+    />
+  {:else if type === 'tel'}
+    <input
+      {...$$restProps}
+      class={classes}
+      type="tel"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {disabled}
+      {name}
+      {placeholder}
+      {readonly}
+      {size}
+    />
+  {:else if type === 'week'}
+    <input
+      {...$$restProps}
+      class={classes}
+      type="week"
+      on:blur
+      on:change
+      on:focus
+      on:input
+      on:keydown
+      on:keypress
+      on:keyup
+      bind:value
+      bind:this={inner}
+      {disabled}
+      {name}
+      {placeholder}
+      {readonly}
+    />
+  {:else}
+    <input
+      {...$$restProps}
+      {type}
+      on:blur
+      on:change={handleInput}
+      on:focus
+      on:input={handleInput}
+      on:keydown
+      on:keypress
+      on:keyup
+      {readonly}
+      class={classes}
+      {name}
+      {disabled}
+      {placeholder}
+      {value}
+    />
   {/if}
 {:else if tag === 'textarea'}
   <textarea
     {...$$restProps}
     class={classes}
     on:blur
+    on:change
     on:focus
+    on:input
     on:keydown
     on:keypress
     on:keyup
-    on:change
-    on:input
     bind:value
-    {name}
+    bind:this={inner}
     {disabled}
+    {name}
     {placeholder}
-    {readonly} />
+    {readonly}
+  />
 {:else if tag === 'select' && !multiple}
   <select
     {...$$restProps}
     class={classes}
     on:blur
-    on:focus
     on:change
+    on:focus
     on:input
     bind:value
+    bind:this={inner}
     {name}
     {disabled}
-    {readonly}>
+    {readonly}
+  >
     <slot />
   </select>
 
@@ -378,8 +514,18 @@
     on:change
     on:input
     bind:value
+    bind:this={inner}
     {name}
     {disabled}>
     <slot />
   </select> -->
+{/if}
+{#if feedback}
+  {#if Array.isArray(feedback)}
+    {#each feedback as msg}
+      <FormFeedback {valid}>{msg}</FormFeedback>
+    {/each}
+  {:else}
+    <FormFeedback {valid}>{feedback}</FormFeedback>
+  {/if}
 {/if}

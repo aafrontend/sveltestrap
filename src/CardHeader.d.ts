@@ -1,9 +1,9 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
 export interface ICardHeaderProps {
   id?: string;
-  tag?: string;
+  tag?: 'div' | 'h3';
 }
 
-declare class CardHeader extends LocalSvelteComponent<ICardHeaderProps> {}
+declare class CardHeader extends SvelteComponentTyped<ICardHeaderProps> {}
 export default CardHeader;

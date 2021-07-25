@@ -1,35 +1,41 @@
 <script>
   import { setContext, onDestroy } from 'svelte';
+  import { createPopperActions } from './popper';
   import classnames from './utils';
 
   import { createContext } from './DropdownContext';
+
+  const noop = () => undefined;
 
   let context = createContext();
   setContext('dropdownContext', context);
 
   let className = '';
   export { className as class };
-  export let direction = 'down';
-  export let group = false;
-  export let isOpen = false;
-  export let nav = false;
   export let active = false;
   export let addonType = false;
+  export let direction = 'down';
+  export let dropup = false;
+  export let group = false;
+  export let inNavbar = false;
+  export let isOpen = false;
+  export let nav = false;
+  export let setActiveFromChild = false;
   export let size = '';
   export let toggle = undefined;
-  export let inNavbar = false;
-  export let setActiveFromChild = false;
-  export let dropup = false;
 
-  const validDirections = ['up', 'down', 'left', 'right'];
+  const [popperRef, popperContent] = createPopperActions();
+
+  const validDirections = ['up', 'down', 'left', 'right', 'start', 'end'];
 
   if (validDirections.indexOf(direction) === -1) {
     throw new Error(
-      `Invalid direction sent: '${direction}' is not one of 'up', 'down', 'left', 'right'`
+      `Invalid direction sent: '${direction}' is not one of 'up', 'down', 'left', 'right', 'start', 'end'`
     );
   }
 
   let component;
+  let dropdownDirection;
 
   $: subItemIsActive = !!(
     setActiveFromChild &&
@@ -38,9 +44,15 @@
     component.querySelector('.active')
   );
 
+  $: {
+    if (direction === 'left') dropdownDirection = 'start';
+    else if (direction === 'right') dropdownDirection = 'end';
+    else dropdownDirection = direction;
+  }
+
   $: classes = classnames(
     className,
-    direction !== 'down' && `drop${direction}`,
+    direction !== 'down' && `drop${dropdownDirection}`,
     nav && active ? 'active' : false,
     setActiveFromChild && subItemIsActive ? 'active' : false,
     {
@@ -70,13 +82,17 @@
   $: {
     context.update(() => {
       return {
-        toggle,
+        toggle: handleToggle,
         isOpen,
         direction: direction === 'down' && dropup ? 'up' : direction,
-        inNavbar
+        inNavbar,
+        popperRef: nav ? noop : popperRef,
+        popperContent: nav ? noop : popperContent
       };
     });
   }
+
+  $: handleToggle = toggle || (() => (isOpen = !isOpen));
 
   function handleDocumentClick(e) {
     if (e && (e.which === 3 || (e.type === 'keyup' && e.which !== 9))) return;
@@ -89,12 +105,15 @@
       return;
     }
 
-    toggle(e);
+    handleToggle(e);
   }
+
   onDestroy(() => {
-    ['click', 'touchstart', 'keyup'].forEach((event) =>
-      document.removeEventListener(event, handleDocumentClick, true)
-    );
+    if (typeof document !== 'undefined') {
+      ['click', 'touchstart', 'keyup'].forEach((event) =>
+        document.removeEventListener(event, handleDocumentClick, true)
+      );
+    }
   });
 </script>
 

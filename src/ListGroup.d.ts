@@ -1,8 +1,13 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface IListGroupProps {
+export interface ListGroupProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['ul']> {
   flush?: boolean;
+  numbered?: boolean;
 }
 
-declare class ListGroup extends LocalSvelteComponent<IListGroupProps> {}
-export default ListGroup;
+export default class ListGroup extends SvelteComponentTyped<
+  ListGroupProps,
+  {},
+  { default: {} }
+> {}

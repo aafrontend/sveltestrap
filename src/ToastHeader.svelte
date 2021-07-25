@@ -1,19 +1,16 @@
 <script>
   import classnames from './utils';
+  import Button from './Button.svelte';
 
   let className = '';
   export { className as class };
   export let icon = null;
   export let toggle = null;
   export let closeAriaLabel = 'Close';
-  export let charCode = 215;
 
   $: classes = classnames(className, 'toast-header');
 
-  $: tagClassName = classnames('mr-auto', { 'ml-2': icon != null });
-
-  $: closeIcon =
-    typeof charCode === 'number' ? String.fromCharCode(charCode) : charCode;
+  $: tagClassName = classnames('me-auto', { 'ms-2': icon != null });
 </script>
 
 <div {...$$restProps} class={classes}>
@@ -25,7 +22,8 @@
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid slice"
       focusable="false"
-      role="img">
+      role="img"
+    >
       <rect fill="currentColor" width="100%" height="100%" />
     </svg>
   {:else}
@@ -36,13 +34,7 @@
   </strong>
   {#if toggle}
     <slot name="close">
-      <button
-        type="button"
-        on:click={toggle}
-        class="close"
-        aria-label={closeAriaLabel}>
-        <span aria-hidden="true">{closeIcon}</span>
-      </button>
+      <Button close on:click={toggle} aria-label={closeAriaLabel} />
     </slot>
   {/if}
 </div>

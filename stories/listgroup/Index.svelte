@@ -8,12 +8,15 @@
   import actionsSource from '!!raw-loader!./Actions.svelte';
   import Flush from './Flush.svelte';
   import flushSource from '!!raw-loader!./Flush.svelte';
+  import Numbered from './Numbered.svelte';
+  import numberedSource from '!!raw-loader!./Numbered.svelte';
 </script>
 
 <h1>List Groups</h1>
 <a
-  href="https://getbootstrap.com/docs/4.5/components/list-group/"
-  target="_blank">
+  href="https://getbootstrap.com/docs/5.0/components/list-group/"
+  target="_blank"
+>
   Bootstrap List Groups
 </a>
 
@@ -29,12 +32,15 @@
   <p slot="info">
     The
     <code>action</code>
-    prop will fill the ListGroupItem with the clickable area for anchors and
-    buttons.
+    prop will fill the ListGroupItem with the clickable area for anchors and buttons.
   </p>
   <Actions />
 </Example>
 
 <Example title="Flush" source={flushSource}>
   <Flush />
+</Example>
+
+<Example title="Numbered" source={numberedSource}>
+  <Numbered />
 </Example>

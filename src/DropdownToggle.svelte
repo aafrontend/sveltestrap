@@ -2,22 +2,22 @@
   import { getContext } from 'svelte';
   import classnames from './utils';
 
-  import Button from './Button.svelte';
-
   const context = getContext('dropdownContext');
 
   let className = '';
   export { className as class };
+  export let ariaLabel = 'Toggle Dropdown';
+  export let active = false;
+  export let block = false;
   export let caret = false;
   export let color = 'secondary';
   export let disabled = false;
-  export let ariaHaspopup = true;
-  export let ariaLabel = 'Toggle Dropdown';
-  export let split = false;
+  export let inner = undefined;
   export let nav = false;
-  export let size = '';
-  export let tag = null;
   export let outline = false;
+  export let size = '';
+  export let split = false;
+  export let tag = null;
 
   $: classes = classnames(className, {
     'dropdown-toggle': caret || split,
@@ -37,45 +37,72 @@
 
     $context.toggle(e);
   }
+
+  $: btnClasses = classnames(
+    classes,
+    'btn',
+    `btn${outline ? '-outline' : ''}-${color}`,
+    size ? `btn-${size}` : false,
+    block ? 'd-block w-100' : false,
+    { active }
+  );
 </script>
 
 {#if nav}
   <a
+    use:$context.popperRef
     {...$$restProps}
+    bind:this={inner}
     on:click
     on:click={toggleButton}
     href="#nav"
-    {ariaHaspopup}
-    class={classes}>
+    aria-expanded={$context.isOpen}
+    class={classes}
+  >
     <slot>
-      <span class="sr-only">{ariaLabel}</span>
+      <span class="visually-hidden">{ariaLabel}</span>
     </slot>
   </a>
-{:else if tag === 'span'}
-  <span
+{:else if tag === 'div'}
+  <div
+    use:$context.popperRef
     {...$$restProps}
+    bind:this={inner}
     on:click
     on:click={toggleButton}
-    {ariaHaspopup}
+    aria-expanded={$context.isOpen}
     class={classes}
-    {color}
-    {size}>
+  >
     <slot>
-      <span class="sr-only">{ariaLabel}</span>
+      <span class="visually-hidden">{ariaLabel}</span>
+    </slot>
+  </div>
+{:else if tag === 'span'}
+  <span
+    use:$context.popperRef
+    {...$$restProps}
+    bind:this={inner}
+    on:click
+    on:click={toggleButton}
+    aria-expanded={$context.isOpen}
+    class={classes}
+  >
+    <slot>
+      <span class="visually-hidden">{ariaLabel}</span>
     </slot>
   </span>
 {:else}
-  <Button
+  <button
+    use:$context.popperRef
     {...$$restProps}
+    bind:this={inner}
     on:click
     on:click={toggleButton}
-    {ariaHaspopup}
-    class={classes}
-    {color}
-    {size}
-    {outline}>
+    aria-expanded={$context.isOpen}
+    class={btnClasses}
+  >
     <slot>
-      <span class="sr-only">{ariaLabel}</span>
+      <span class="visually-hidden">{ariaLabel}</span>
     </slot>
-  </Button>
+  </button>
 {/if}

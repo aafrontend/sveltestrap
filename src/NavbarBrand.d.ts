@@ -1,8 +1,12 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface INavbarBrandProps {
+export interface NavbarBrandProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['a']> {
   href?: string;
 }
 
-declare class NavbarBrand extends LocalSvelteComponent<INavbarBrandProps> {}
-export default NavbarBrand;
+export default class NavbarBrand extends SvelteComponentTyped<
+  NavbarBrandProps,
+  { click: WindowEventMap['click'] },
+  { default: {} }
+> {}

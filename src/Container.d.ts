@@ -1,10 +1,18 @@
-import { LocalSvelteComponent } from './shared';
+import { SvelteComponentTyped } from 'svelte';
 
-export interface ContainerProps {
+export interface ContainerProps
+  extends svelte.JSX.HTMLAttributes<HTMLElementTagNameMap['div']> {
   id?: string;
-
+  sm?: boolean;
+  md?: boolean;
+  lg?: boolean;
+  xl?: boolean;
+  xxl?: boolean;
   fluid?: boolean | string;
 }
 
-declare class Container extends LocalSvelteComponent<ContainerProps> {}
-export default Container;
+export default class Container extends SvelteComponentTyped<
+  ContainerProps,
+  {},
+  { default: {} }
+> {}
